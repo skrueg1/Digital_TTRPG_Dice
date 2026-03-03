@@ -13,10 +13,13 @@ def createDiceButton(parent, text, image):
     return createWidget(
         parent, tk.Button,
         bd = 0, cursor = 'hand2',
-        bg="lightgray",
+        bg = container.cget("bg"),
+        fg = "black", font = ("Arial", 12, "bold"),
+        activebackground = container.cget("bg"),
+        activeforeground = None,
+        relief = "flat",
         command=lambda d=die: selectDice(d),
         image = image, text = text,
-        fg = "black", font = ("Arial", 12, "bold"),
         compound = TOP,
         padx = 15, pady = 5
     )
@@ -47,7 +50,7 @@ root.geometry(f"{wWidth}x{wHeight}+{centerX}+{centerY}")
 ## Content container 
 container = createWidget(
     root, tk.Frame,
-    height = 1000, width = 1000,
+    height = 600, width = 1000,
     bg='lightblue', bd=3,
     highlightcolor='red',
     highlightbackground='black',
