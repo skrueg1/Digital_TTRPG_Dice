@@ -2,8 +2,14 @@ import tkinter as tk
 from tkinter import *
 from PIL import Image, ImageTk
 import random
+import ctypes
 
 # --- FUNCTIONS ---
+
+def loadFont(path):
+    FR_PRIVATE = 0x10
+    FR_NOT_ENUM = 0x20
+    ctypes.windll.gdi32.AddFontResourceExW(path, FR_PRIVATE, 0)
 
 def createWidget(parent, widgetType, **options):
     return widgetType(parent, **options)
@@ -13,9 +19,9 @@ def createDiceButton(parent, text, image):
         parent, tk.Button,
         bd = 0, cursor = 'hand2',
         bg = root.cget("bg"),
-        fg = "black", font = ("Arial", 12, "bold"),
+        fg = "#6a070b", font = ("Ithaca", 18),
         activebackground = root.cget("bg"),
-        activeforeground = None,
+        activeforeground = "#350408",
         relief = "flat",
         command=lambda d=die: selectDice(d),
         image = image, text = text,
@@ -41,10 +47,8 @@ root = createWidget(None, tk.Tk)
 root.title("Dice Roller")
 wWidth, wHeight = 1200, 1000
 root.config(bg = '#1E0F11')
-## Center the pop-up
-centerX = (root.winfo_screenwidth() // 2) - (wWidth // 2)
-centerY = (root.winfo_screenheight() // 2) - (wHeight // 2)
-root.geometry(f"{wWidth}x{wHeight}+{centerX}+{centerY}")
+root.iconphoto(True, tk.PhotoImage(file="assets/images/d4.png"))
+loadFont("assets/Ithaca-LVB75.ttf")
 
 # --- UI ---
 ## Load Title Photo
@@ -55,11 +59,12 @@ titleImage = createWidget(
     bg = root.cget("bg")
 )
 titleImage.photo = titlePhoto
-titleImage.pack(pady = (50, 0))
+titleImage.pack(pady = (75, 30))
 
 ## Create dice menu
 diceDisplay = createWidget(
     root, tk.Frame,
+    bg = root.cget("bg"),
     height = 160, width = 1000
 )
 diceDisplay.pack()
@@ -69,22 +74,19 @@ selected = None # no dice is selected when window opens
 for die in diceTypes:
     photo = PhotoImage(file = "assets/images/" + die + ".png")
     diceButton = createDiceButton(diceDisplay, die, photo)
-    diceButton.pack(side = LEFT)
+    diceButton.pack(side = LEFT, padx = 5)
     diceButton.pack_propagate(False)
     diceButtons[die] = (diceButton,photo)
-diceDisplay.pack(pady = 10)
+diceDisplay.pack()
 
 ## Display result
 resultLabel = createWidget(
     root, tk.Label,
-    text='Result: ',
-    font='50', bg='lightblue',
-    bd=3, cursor='hand2',
-    highlightcolor='red',
-    highlightbackground='black',
-    highlightthickness=2
+    bg = root.cget("bg"), bd = 0, 
+    text = 'Select a dice to start',
+    fg = "#6a070b", font = ("Ithaca", 40)
 )
-resultLabel.pack(pady = (20,0))
+resultLabel.pack(pady = (50,0))
 
 ## Load Background photo
 backgroundPhoto = PhotoImage(file = "assets/images/lowerUI.png")
@@ -94,7 +96,7 @@ backgroundImage = createWidget(
     bg = root.cget("bg")
 )
 backgroundImage.photo = backgroundPhoto
-backgroundImage.pack(pady = (50, 0))
+backgroundImage.pack()
 
 # --- MAIN ---
 root.mainloop()
